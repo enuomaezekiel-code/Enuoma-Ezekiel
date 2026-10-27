@@ -1,0 +1,6 @@
+{
+  "name": "TaskNaija - Nigerian Freelance Marketplace",
+  "description": "Mobile-first Nigerian marketplace connecting clients with vetted freelancers for digital tasks with secure tracking in NGN.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,236 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile with dual client/worker role support in Nigeria",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "maxLength": 128 },
+        "displayName": { "type": "string", "maxLength": 100 },
+        "email": { "type": "string", "maxLength": 150 },
+        "photoURL": { "type": "string", "maxLength": 500 },
+        "bio": { "type": "string", "maxLength": 1000 },
+        "skills": { "type": "array" },
+        "portfolioUrl": { "type": "string", "maxLength": 500 },
+        "location": { "type": "string", "maxLength": 100 },
+        "role": { "type": "string", "enum": ["client", "worker", "both"] },
+        "completedJobs": { "type": "number" },
+        "rating": { "type": "number" },
+        "ratingCount": { "type": "number" },
+        "isSuspended": { "type": "boolean" },
+        "isAdmin": { "type": "boolean" },
+        "createdAt": { "type": "string", "maxLength": 100 }
+      },
+      "required": ["uid", "displayName", "email", "role"]
+    },
+    "Task": {
+      "title": "Task",
+      "description": "A freelance digital task posted by a Nigerian client",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "maxLength": 140 },
+        "description": { "type": "string", "maxLength": 3000 },
+        "category": { "type": "string", "maxLength": 80 },
+        "budgetNgn": { "type": "number" },
+        "deadline": { "type": "string", "maxLength": 100 },
+        "requiredSkills": { "type": "array" },
+        "attachmentUrls": { "type": "array" },
+        "clientId": { "type": "string", "maxLength": 128 },
+        "clientName": { "type": "string", "maxLength": 100 },
+        "assignedWorkerId": { "type": "string", "maxLength": 128 },
+        "assignedWorkerName": { "type": "string", "maxLength": 100 },
+        "status": {
+          "type": "string",
+          "enum": [
+            "OPEN",
+            "APPLICATIONS_RECEIVED",
+            "WORKER_SELECTED",
+            "IN_PROGRESS",
+            "SUBMITTED",
+            "REVISION_REQUESTED",
+            "APPROVED",
+            "COMPLETED",
+            "CANCELLED"
+          ]
+        },
+        "paymentStatus": {
+          "type": "string",
+          "enum": [
+            "Not Recorded",
+            "Payment Agreed",
+            "Payment Reported",
+            "Payment Confirmed by Both Parties",
+            "Disputed"
+          ]
+        },
+        "applicationsCount": { "type": "number" },
+        "isFlagged": { "type": "boolean" },
+        "createdAt": { "type": "string", "maxLength": 100 },
+        "updatedAt": { "type": "string", "maxLength": 100 }
+      },
+      "required": ["title", "description", "category", "budgetNgn", "clientId", "status"]
+    },
+    "Application": {
+      "title": "Application",
+      "description": "Job application submitted by a Nigerian worker",
+      "type": "object",
+      "properties": {
+        "taskId": { "type": "string", "maxLength": 128 },
+        "clientId": { "type": "string", "maxLength": 128 },
+        "workerId": { "type": "string", "maxLength": 128 },
+        "workerName": { "type": "string", "maxLength": 100 },
+        "workerPhoto": { "type": "string", "maxLength": 500 },
+        "workerBio": { "type": "string", "maxLength": 500 },
+        "workerSkills": { "type": "array" },
+        "pitch": { "type": "string", "maxLength": 2000 },
+        "proposedDays": { "type": "number" },
+        "bidAmountNgn": { "type": "number" },
+        "status": { "type": "string", "enum": ["PENDING", "ACCEPTED", "REJECTED"] },
+        "createdAt": { "type": "string", "maxLength": 100 }
+      },
+      "required": ["taskId", "clientId", "workerId", "workerName", "pitch", "status"]
+    },
+    "JobSubmission": {
+      "title": "JobSubmission",
+      "description": "Deliverable submitted by an assigned worker",
+      "type": "object",
+      "properties": {
+        "taskId": { "type": "string", "maxLength": 128 },
+        "clientId": { "type": "string", "maxLength": 128 },
+        "workerId": { "type": "string", "maxLength": 128 },
+        "submissionNotes": { "type": "string", "maxLength": 3000 },
+        "deliverableUrl": { "type": "string", "maxLength": 1000 },
+        "revisionFeedback": { "type": "string", "maxLength": 2000 },
+        "status": { "type": "string", "enum": ["SUBMITTED", "REVISION_REQUESTED", "APPROVED"] },
+        "createdAt": { "type": "string", "maxLength": 100 },
+        "updatedAt": { "type": "string", "maxLength": 100 }
+      },
+      "required": ["taskId", "clientId", "workerId", "submissionNotes", "status"]
+    },
+    "JobEvent": {
+      "title": "JobEvent",
+      "description": "Audit and timeline event for a task lifecycle transition",
+      "type": "object",
+      "properties": {
+        "taskId": { "type": "string", "maxLength": 128 },
+        "clientId": { "type": "string", "maxLength": 128 },
+        "workerId": { "type": "string", "maxLength": 128 },
+        "authorId": { "type": "string", "maxLength": 128 },
+        "authorName": { "type": "string", "maxLength": 100 },
+        "eventType": { "type": "string", "maxLength": 50 },
+        "note": { "type": "string", "maxLength": 1000 },
+        "createdAt": { "type": "string", "maxLength": 100 }
+      },
+      "required": ["taskId", "authorId", "eventType"]
+    },
+    "PaymentRecord": {
+      "title": "PaymentRecord",
+      "description": "Direct pilot payment status agreement tracking",
+      "type": "object",
+      "properties": {
+        "taskId": { "type": "string", "maxLength": 128 },
+        "clientId": { "type": "string", "maxLength": 128 },
+        "workerId": { "type": "string", "maxLength": 128 },
+        "amountNgn": { "type": "number" },
+        "platformCommissionPercent": { "type": "number" },
+        "status": {
+          "type": "string",
+          "enum": [
+            "Not Recorded",
+            "Payment Agreed",
+            "Payment Reported",
+            "Payment Confirmed by Both Parties",
+            "Disputed"
+          ]
+        },
+        "clientNotes": { "type": "string", "maxLength": 1000 },
+        "workerNotes": { "type": "string", "maxLength": 1000 },
+        "updatedAt": { "type": "string", "maxLength": 100 }
+      },
+      "required": ["taskId", "clientId", "workerId", "amountNgn", "status"]
+    },
+    "Report": {
+      "title": "Report",
+      "description": "Trust and safety flag reported by user for admin review",
+      "type": "object",
+      "properties": {
+        "reporterId": { "type": "string", "maxLength": 128 },
+        "reporterName": { "type": "string", "maxLength": 100 },
+        "targetType": { "type": "string", "enum": ["task", "user", "job"] },
+        "targetId": { "type": "string", "maxLength": 128 },
+        "targetTitle": { "type": "string", "maxLength": 200 },
+        "reason": { "type": "string", "maxLength": 200 },
+        "details": { "type": "string", "maxLength": 2000 },
+        "status": { "type": "string", "enum": ["PENDING", "REVIEWED", "DISMISSED", "ACTION_TAKEN"] },
+        "adminNotes": { "type": "string", "maxLength": 1000 },
+        "createdAt": { "type": "string", "maxLength": 100 }
+      },
+      "required": ["reporterId", "targetType", "targetId", "reason", "status"]
+    },
+    "Review": {
+      "title": "Review",
+      "description": "Feedback and rating left after a job is completed",
+      "type": "object",
+      "properties": {
+        "taskId": { "type": "string", "maxLength": 128 },
+        "authorId": { "type": "string", "maxLength": 128 },
+        "authorName": { "type": "string", "maxLength": 100 },
+        "targetUserId": { "type": "string", "maxLength": 128 },
+        "roleReviewed": { "type": "string", "enum": ["client", "worker"] },
+        "rating": { "type": "number" },
+        "comment": { "type": "string", "maxLength": 1500 },
+        "createdAt": { "type": "string", "maxLength": 100 }
+      },
+      "required": ["taskId", "authorId", "targetUserId", "roleReviewed", "rating"]
+    },
+    "PlatformSetting": {
+      "title": "PlatformSetting",
+      "description": "Global settings for platform fees and announcements",
+      "type": "object",
+      "properties": {
+        "commissionPercent": { "type": "number" },
+        "safetyNotice": { "type": "string", "maxLength": 1000 },
+        "updatedAt": { "type": "string", "maxLength": 100 }
+      },
+      "required": ["commissionPercent"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/User" },
+      "description": "User profile with skills, portfolio, and completed jobs"
+    },
+    "/tasks/{taskId}": {
+      "schema": { "$ref": "#/entities/Task" },
+      "description": "Freelance marketplace task posted by a client"
+    },
+    "/applications/{applicationId}": {
+      "schema": { "$ref": "#/entities/Application" },
+      "description": "Worker application for an open task"
+    },
+    "/jobSubmissions/{submissionId}": {
+      "schema": { "$ref": "#/entities/JobSubmission" },
+      "description": "Delivered work and revision requests"
+    },
+    "/jobEvents/{eventId}": {
+      "schema": { "$ref": "#/entities/JobEvent" },
+      "description": "Task status change history and timeline logs"
+    },
+    "/paymentRecords/{paymentRecordId}": {
+      "schema": { "$ref": "#/entities/PaymentRecord" },
+      "description": "Offline payment agreement and status record"
+    },
+    "/reports/{reportId}": {
+      "schema": { "$ref": "#/entities/Report" },
+      "description": "Trust and safety moderation reports"
+    },
+    "/reviews/{reviewId}": {
+      "schema": { "$ref": "#/entities/Review" },
+      "description": "Post-completion feedback and star ratings"
+    },
+    "/platformSettings/{settingId}": {
+      "schema": { "$ref": "#/entities/PlatformSetting" },
+      "description": "Platform settings including default commission rate"
+    }
+  }
+}
